@@ -1,0 +1,43 @@
+<header class="header">
+  <h1>Wasted Food Management System</h1>
+</header>
+
+<div class="main">
+  <div class="alert-box-container">
+    <!-- alert-box -->
+    <div class="alert" *ngIf="serverErrorMessages!='false'">
+      {{serverErrorMessages}}
+    </div>
+    <!-- form -->
+    </div>
+      <form [formGroup]="loginForm" class="form-inline">
+        <div class="input">
+          <br>
+          <label for="accountType">Account Type</label>
+          <select formControlName="userType" id="accountType" class="form-control all1" aria-describedby="userHelp" placeholder="Account Type">
+            <!-- <option value="Admin">Admin</option> -->
+            <option value="NGO Representative">NGO Representative</option>
+            <option value="Restaurant Representative">Restaurant Representative</option>
+          </select>
+         <small id="userHelp" class="form-text text-muted"></small>
+         <br />
+ 
+          <label for="userName">Email</label>
+          <input formControlName="email" type="text" class="form-control all1" id="userName" aria-describedby="userHelp" placeholder="Enter Restaurant/NGO email">
+          <small id="userHelp" class="form-text text-muted"></small>
+          <br />
+          <label for="userName">Password</label>
+          <input formControlName="password" type="password" class="form-control all1" id="password" aria-describedby="passHelp" placeholder="Enter password">
+          <small id="passHelp" class="form-text text-muted"></small>
+          <br />
+        </div>   
+        <!-- <a href="" style="padding-left:35%" (click)="forgotPassword()" routerLink="forgot-password">Forgot Password?</a> -->
+        <br />
+        <input click type="submit" (click)="login()" value="Login"  class="submit" />
+        <p style="padding-left:15%">Don't have an Account? <a href="#" routerlink="home">Register now</a></p>
+     </form>
+</div>
+   
+ 
+ 
+ 

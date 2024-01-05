@@ -1,0 +1,200 @@
+<div class="navbar">
+    <div class="nav-left">
+        <a (click)="addFoodPackageButton()">Upload Food Package</a>
+        <a (click)="showNotificaitons()">Notifications</a>
+    </div>
+    <div class="nav-middle">
+        <h1 class="welcome-message">{{currentRestaurant.name}}  Restaurant Dashboard</h1>
+    </div>
+    <div class="nav-right">
+        <a (click)="pendingRequestList()">Available Food Requests</a>
+        <a href="" routerLink="/login" (click)="logout()">Log Out</a>
+    </div>  
+</div>
+
+<div *ngIf="currentContent=='activities'">
+  <div class="caption1">
+      <h2>Current Activities</h2>
+  </div>
+  <table class="table table-bordered border-primary table-info">
+    <thead class="table-dark">
+          <tr>
+            <th scope="col">Package ID</th>
+            <th scope="col">Food type</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Upload time</th>
+            <th scope="col">Expiry Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Update/Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let package of currrentPackages; let i=index">
+            <td>{{package.packageId}}</td>
+            <td>{{package.foodName}}</td>
+            <td>{{package.quantity}}</td>
+            <td>{{package.addingDate}}</td>
+            <td>{{package.expiryDate}}</td>
+            <td>{{package.status}}</td>
+            <td>
+              <button *ngIf="package.status=='Pending'" class="btn-primary" (click)="updatePackage(package)">Update</button>
+              <button *ngIf="package.status!='Pending'" class="btn-primary" (click)="updatePackage(package)" disabled>Update</button>
+              <button *ngIf="package.status=='Pending'" class="btn-danger" (click)="deletePackage(package)">Delete</button>
+              <button *ngIf="package.status!='Pending'" class="btn-danger" (click)="deletePackage(package)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    
+    
+    <!-- <div class="caption2">
+        <h2>Last One month Activities</h2>
+    </div>
+    
+    <table class="table table-bordered border-primary table-info">
+      <thead class="table-dark">
+          <tr>
+            <th scope="col">Package ID</th>
+            <th scope="col">Food type</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Upload time</th>
+            <th scope="col">Expiry Date</th>
+            <th scope="col">Status</th>
+            <th scope="col">Update/Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+           <tr *ngFor="let request of requests; let i=index">
+            <td>{{request.date}}</td>
+            <td>{{request.foodType}}</td>
+            <td>{{request.amount}}</td>
+            <td>{{request.timeLimit}}</td>
+            <td><button (click)="updateRequest(request,i)">Update</button></td>
+            <td><button (click)="deleteRequest(request)">Delete</button></td>
+          </tr> 
+        </tbody>
+      </table>     -->
+</div>
+
+<!-- PendingRequests -->
+<div *ngIf="currentContent=='pendingRequests'">
+  <div class="caption1">
+    <h2>Current Pending Requests</h2>
+</div>
+
+<table class="table table-bordered border-primary table-info">
+  <thead class="table-dark">
+      <tr>
+        <th scope="col">Request Id</th>
+        <th scope="col">Uploaded By(NGO)</th>
+        <th scope="col">Food Type</th>
+        <th scope="col">Quantity</th>
+        <th scope="col">Date Added</th>
+        <th scope="col">Supply Date</th>
+        <th scope="col">Delivery Location</th>
+        <th scope="col">Notify the NGO</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let request of allPendingRequests; let i=index">
+        <td>{{request.requestId}}</td>
+        <td>{{request.ngoName}}</td>
+        <td>{{request.foodName}}</td>
+        <td>{{request.quantity}}</td>
+        <td>{{request.addingDate}}</td>
+        <td>{{request.supplyDate}}</td>
+        <td>{{request.deliveryAddress}}</td>
+       <td><button class="btn-primary" (click)="notifyNGO(request)">Notify</button></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+
+<!-- addFoodForm -->
+<div *ngIf="currentContent=='addFoodPackageForm'">
+  <div class="main">
+    <form [formGroup]="foodPackage" class="form-inline">
+      <div class="input">
+        <br>
+        <label for="accountType">Select Food</label>
+        <select formControlName="foodName" id="accountType" class="form-control all1" aria-describedby="userHelp" placeholder="Select Food">
+          <option>Select food</option>
+          <option *ngFor="let food of foodItems;">{{food.name}}</option>
+        </select>
+       <small id="userHelp" class="form-text text-muted"></small>
+       <br />
+        <label for="userName">Quantity</label>
+        <input formControlName="quantity" type="number" class="form-control all1" id="userName" aria-describedby="userHelp" placeholder="Quantity">
+        <small id="userHelp" class="form-text text-muted"></small>
+        <br />
+        <label for="userName">Expiry Date</label>
+        <input formControlName="expiryDate" type="date" class="form-control all1" id="password" aria-describedby="passHelp" placeholder="Expiry Date">
+        <small id="passHelp" class="form-text text-muted"></small>
+        <br/>
+      </div>   
+      <input click type="submit" value="Add Package" (click)="addFoodPackage()" class="submit"/>
+   </form>
+</div>
+</div>
+
+
+<!-- updatePackageForm -->
+<div *ngIf="currentContent=='updateForm'">
+  <div class="main">
+    <form [formGroup]="updatedPackage" class="form-inline">
+      <div class="input">
+        <br>
+        <label for="accountType">Update Food</label>
+        <select formControlName="foodName" id="accountType" class="form-control all1" aria-describedby="userHelp" placeholder="Select Food">
+          <option>{{packageToBeUpdated.foodName}}</option>
+          <option *ngFor="let food of foodItems;">{{food.name}}</option>
+        </select>
+       <small id="userHelp" class="form-text text-muted"></small>
+       <br />
+        <label for="userName">Update Quantity</label>
+        <input formControlName="quantity" type="number" class="form-control all1" id="userName" aria-describedby="userHelp" placeholder="{{packageToBeUpdated.quantity}}">
+        <small id="userHelp" class="form-text text-muted"></small>
+        <br />
+        <label for="userName">Expiry Date</label>
+        <input formControlName="expiryDate" type="date" class="form-control all1" id="password" aria-describedby="passHelp" placeholder="{{packageToBeUpdated.expiryDate}}">
+        <small id="passHelp" class="form-text text-muted"></small>
+        <br/>
+      </div>   
+      <input click type="submit" value="Update Package" (click)="updateFoodPackage()" class="submit"/>
+   </form>
+</div>
+</div>
+
+
+<!-- notificaitons -->
+<div *ngIf="currentContent=='notifications'">
+  <div class="caption1">
+    <h2>All Notifications</h2>
+</div>
+
+<table class="table table-bordered border-primary table-info">
+    <thead class="table-dark">
+      <tr>
+        <th scope="col">Index</th>
+        <th scope="col">Details</th>
+        <th scope="col">Time</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let notification of notifications; let i=index">
+        <td>{{i+1}}</td>
+        <td>{{notification.message}}</td>
+        <td>{{notification.addingDate}}</td>
+        <td *ngIf="notification.status=='running'">
+            <button class="remove-btn btn-primary" (click)="confirm(notification)">Confirm Delivery</button>
+            <button class="remove-btn btn-secondary" (click)="cancel(notification)">Cancel</button>
+        </td>
+        <td *ngIf="notification.status=='done'">
+          Completed
+          <!-- <button class="remove-btn" (click)="confirm(notification)">Mark as Done</button> -->
+      </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
